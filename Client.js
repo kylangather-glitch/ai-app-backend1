@@ -1,16 +1,29 @@
-const mongoose = require("mongoose")
+const express = require("express")
+const router = express.Router()
 
-const ClientSchema = new mongoose.Schema({
-  name: String,
-  business: String,
-  email: String,
-  instagram: String,
-  facebook: String,
-  website: String,
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
+const Client = require("../Client")
+
+router.post("/", async (req, res) => {
+
+  const client = new Client(req.body)
+
+  await client.save()
+
+  res.json(client)
 })
 
-module.exports = mongoose.model("Client", ClientSchema)
+router.get("/", async (req, res) => {
+
+  const clients = await Client.find()
+
+  res.json(clients)
+})
+
+router.delete("/:id", async (req, res) => {
+
+  await Client.findByIdAndDelete(req.params.id)
+
+  res.json({ message: "Client deleted" })
+})
+
+module.exports = router
