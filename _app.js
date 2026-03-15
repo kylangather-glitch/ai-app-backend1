@@ -1,33 +1,14 @@
-const express = require("express")
-const router = express.Router()
+import '../styles/globals.css'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
-const ai = require("../../../services/openaiService")
+const queryClient = new QueryClient()
 
-router.post("/post", async (req, res) => {
+function MyApp({ Component, pageProps }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Component {...pageProps} />
+    </QueryClientProvider>
+  )
+}
 
-  const { topic } = req.body
-
-  const caption = await ai.generatePost(topic)
-
-  res.json({ caption })
-})
-
-router.post("/reply", async (req, res) => {
-
-  const { comment } = req.body
-
-  const reply = await ai.generateReply(comment)
-
-  res.json({ reply })
-})
-
-router.post("/video-script", async (req, res) => {
-
-  const { topic } = req.body
-
-  const script = await ai.generateVideoScript(topic)
-
-  res.json({ script })
-})
-
-module.exports = router
+export default MyApp
